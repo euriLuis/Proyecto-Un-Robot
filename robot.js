@@ -49,7 +49,6 @@ class VillageState {
 
 function runRobot(state, robot, memory) {
     for (let turn = 0;; turn++) {
-        console.log(state.parcels);
         if (state.parcels.length == 0) {
             console.log(`Terminado en ${turn} turnos`);
             break;
@@ -125,4 +124,26 @@ function goalOrientedRobot({place, parcels}, route) {
     return {direction: route[0], memory: route.slice(1)};
 }
 
-runRobot(VillageState.random(), goalOrientedRobot, []);
+function contPas(state, robot, memory) {
+    for (let turnos = 0;; turnos++) {
+        
+        if (state.parcels.length == 0) {return turnos;}
+
+        let action =  robot(state, memory);
+        state = state.move(action.direction);
+        memory = action.memory;  
+    }
+}
+
+function compare(robot1, memoria1, robot2, memoria2) {
+    let pasos1 = 0;
+    let pasos2 = 0;    
+    for (let i = 0; i <= 1000; i++) {
+        let estado = VillageState.random();
+        pasos1 += contPas(estado, robot1, memoria1); 
+        pasos2 += contPas(estado, robot2, memoria2);
+    }
+    return `El promedio de pasos del robot 1 fue de ${pasos1 / 1000} y el del robot2 fue de ${pasos2 / 1000}`;
+}
+
+console.log(compare(goalOrientedRobot, [], routeRobot, []));
