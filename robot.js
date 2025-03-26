@@ -168,15 +168,7 @@ function goalSmart({place, parcels}, route) {
             }
             route = [...rut()];
         } else {
-            //buscar la ruta mas corta
-            rut = () => {
-                let rutas = [];
-                for (let index = 0; index < parcels.length; index++) {
-                    rutas.push(findRoute(roadGraph, place, parcels[index].address));
-                }
-                return rutas.reduce((minRoute, rutActual) => rutActual.length < minRoute.length ? rutActual : minRoute);
-            }
-            route = [...rut()];
+            route = findRoute(roadGraph, place, parcel.address);
         }
     }
     return {direction: route[0], memory: route.slice(1)};
