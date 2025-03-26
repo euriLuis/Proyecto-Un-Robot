@@ -8,6 +8,8 @@ const roads = [
     "Marketplace-Town Hall",       "Shop-Town Hall"
 ];
 
+const roadGraph = buildGraph(roads);
+
 function buildGraph(edges) {
     let graph = Object.create(null);
 
@@ -26,7 +28,8 @@ function buildGraph(edges) {
 
     return graph;
 }
-const roadGraph = buildGraph(roads);
+
+
 
 class VillageState {
     constructor(place, parcels) {
@@ -42,10 +45,24 @@ class VillageState {
           if (p.place != this.place) return p;
           return {place: destination, address: p.address};
         }).filter(p => p.place != p.address);
+        
         return new VillageState(destination, parcels);
       }
     }
 }
+
+VillageState.random = function(parcelCount = 5) {
+    let parcels = [];
+    for (let i = 0; i < parcelCount; i++) {
+      let address = randomPick(Object.keys(roadGraph));
+      let place;
+      do {
+        place = randomPick(Object.keys(roadGraph));
+      } while (place == address);
+      parcels.push({place, address});
+    }
+    return new VillageState("Post Office", parcels);
+};
 
 function runRobot(state, robot, memory) {
     for (let turn = 0;; turn++) {
@@ -68,20 +85,6 @@ function randomPick(array) {
 function randomRobot(state) {
     return {direction: randomPick(roadGraph[state.place])}
 }
-
-
-VillageState.random = function(parcelCount = 5) {
-    let parcels = [];
-    for (let i = 0; i < parcelCount; i++) {
-      let address = randomPick(Object.keys(roadGraph));
-      let place;
-      do {
-        place = randomPick(Object.keys(roadGraph));
-      } while (place == address);
-      parcels.push({place, address});
-    }
-    return new VillageState("Post Office", parcels);
-};
 
 const mailRoute = [
     "Alice's House", "Cabin", "Alice's House", "Bob's House",
@@ -136,14 +139,49 @@ function contPas(state, robot, memory) {
 }
 
 function compare(robot1, memoria1, robot2, memoria2) {
-    let pasos1 = 0;
-    let pasos2 = 0;    
-    for (let i = 0; i <= 1000; i++) {
+
+    let pasos1 = 0, pasos2 = 0;
+    let tareas = 1000; 
+
+    for (let i = 0; i <= tareas; i++) {
         let estado = VillageState.random();
         pasos1 += contPas(estado, robot1, memoria1); 
         pasos2 += contPas(estado, robot2, memoria2);
     }
-    return `El promedio de pasos del robot 1 fue de ${pasos1 / 1000} y el del robot2 fue de ${pasos2 / 1000}`;
+    return `El promedio de pasos del robot 1 fue de ${pasos1 / tareas} y el del robot2 fue de ${pasos2 / tareas}`;
 }
 
-console.log(compare(goalOrientedRobot, [], routeRobot, []));
+
+//aveces funciona, aveces no 
+function goalSmart({place, parcels}, route) {
+    if (route.length == 0) {
+        let parcel = parcels[0];
+
+        if (parcel.place != place) {
+            //buscar la ruta mas corta
+            rut = () => {
+                let rutas = [];
+                for (let index = 0; index < parcels.length; index++) {
+                    rutas.push(findRoute(roadGraph, place, parcels[index].place));
+                }
+                return rutas.reduce((minRoute, rutActual) => rutActual.length < minRoute.length ? rutActual : minRoute);
+            }
+            route = [...rut()];
+        } else {
+            //buscar la ruta mas corta
+            rut = () => {
+                let rutas = [];
+                for (let index = 0; index < parcels.length; index++) {
+                    rutas.push(findRoute(roadGraph, place, parcels[index].address));
+                }
+                return rutas.reduce((minRoute, rutActual) => rutActual.length < minRoute.length ? rutActual : minRoute);
+            }
+            route = [...rut()];
+        }
+    }
+    return {direction: route[0], memory: route.slice(1)};
+}
+
+runRobot(VillageState.random(2), goalSmart, [])
+
+
