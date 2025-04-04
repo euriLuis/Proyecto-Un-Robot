@@ -141,7 +141,7 @@ function contPas(state, robot, memory) {
 function compare(robot1, memoria1, robot2, memoria2) {
 
     let pasos1 = 0, pasos2 = 0;
-    let tareas = 1000; 
+    let tareas = 10000; 
 
     for (let i = 0; i <= tareas; i++) {
         let estado = VillageState.random();
@@ -174,6 +174,26 @@ function goalSmart({place, parcels}, route) {
     return {direction: route[0], memory: route.slice(1)};
 }
 
-runRobot(VillageState.random(2), goalSmart, [])
-
-
+class PGroup {
+    #members;
+    constructor(members) {
+      this.#members = members;
+    }
+  
+    add(value) {
+      if (this.has(value)) return this;
+      return new PGroup(this.#members.concat([value]));
+    }
+  
+    delete(value) {
+      if (!this.has(value)) return this;
+      return new PGroup(this.#members.filter(m => m !== value));
+    }
+  
+    has(value) {
+      return this.#members.includes(value);
+    }
+  
+    static empty = new PGroup([]);
+  
+}
