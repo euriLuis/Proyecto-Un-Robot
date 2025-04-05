@@ -13,19 +13,20 @@ la función encargada de ejecutarlos.
 donde al un robot pasar por un sitio si esta presente un paquete 
 lo recoge y si es la dirección de entrega de un paquete que ya posee
 lo entrega.
-	1. esta clase posee el método `random()` el cual se encarga de crear
+	- esta clase posee el método `random()` el cual se encarga de crear
     el estado inicial de la Villa y de crear los paquetes y el numero
     deseado de paquetes [^2].
 3. Módulo graf: posee los enlaces entre los sitios del pueblo y la función
  `buildGraph()` encargada de crear un grafo a partir de estos enlaces o caminos.
 
 **Ejecución del proyecto**
+
 Este proyecto esta pensado para correr en nodeJS
 ```bash
 node robot.js
 ```
 
-Para esto previamente se debe añadir  la llamada  a una de las funciones:
+*Para esto previamente se debe añadir  la llamada  a una de las funciones*:
 
  - `runRobot(state, robot, memory)` se encarga de ejecutar los robots dándole 
  el estado, el robot y la memoria del robot.
@@ -35,9 +36,9 @@ runRobot(VillageState.random(), routeRobot, []);
 
 ```bash
 node robot
-//Movido a Alice's House
+//Movido a Alices House
 //Movido a Cabin
-//Movido a Alice's House
+//Movido a Alices House
 //...
 //Terminado en 20 turnos
 ```
@@ -58,7 +59,7 @@ node robot
 - `randomRobot(state)` robot que recorre de forma aleatoria el pueblo hasta que termine
  entregando todos los paquetes.
 - `routeRobot(state, memory)` robot que cuenta con una ruta predefinida que cubre todos
- los lugares del pueblo así al seguir esta ruta 2 veces se entregaren todos los paquetes.
+ los lugares del pueblo así al seguir esta ruta 2 veces se entregaran todos los paquetes.
 - ` goalOrientedRobot({place, parcels}, route)` robot que busca la ruta mas corta a un 
 paquete, luego lo entrega siguiendo la ruta mas corta.
 - `goalSmart({place, parcels}, route)` robot que determina cual es el paquete mas cercano,
