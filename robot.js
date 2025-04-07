@@ -22,6 +22,7 @@ function runRobot(state, robot, memory) {
 function randomRobot(state) {
     return {direction: randomPick(roadGraph[state.place])}
 }
+
 function routeRobot(state, memory) {
     if (memory.length == 0) {
         memory = mailRoute; 
@@ -56,25 +57,20 @@ function goalOrientedRobot({place, parcels}, route) {
     return {direction: route[0], memory: route.slice(1)};
 }
 
-function goalSmart({place, parcels}, route) {
+function goalSmart ({place, parcels}, route){
     if (route.length == 0) {
-        let parcel = parcels[0];
-
-        if (parcel.place != place) {
-            //buscar la ruta mas corta
-            let rut = () => {
-                let rutas = [];
-                for (let index = 0; index < parcels.length; index++) {
-                    rutas.push(findRoute(roadGraph, place, parcels[index].place));
-                }
-                return rutas.reduce((minRoute, rutActual) => rutActual.length < minRoute.length ? rutActual : minRoute);
+        
+        let rutas = [];
+        for (const pack of parcels) {
+            if (pack.place !== place) {
+                rutas.push(findRoute(roadGraph, place, pack.place));
+            } else {
+                rutas.push(findRoute(roadGraph, place, pack.address));
             }
-            route = [...rut()];
-        } else {
-            route = findRoute(roadGraph, place, parcel.address);
         }
+        route = rutas.reduce((minRoute, rutActual) => rutActual.length < minRoute.length ? rutActual : minRoute); 
     }
-    return {direction: route[0], memory: route.slice(1)};
+    return {direction: route[0], memory: route.slice(1)}
 }
 
 function contPas(state, robot, memory) {
@@ -94,7 +90,7 @@ function compare(robot1, memoria1, robot2, memoria2) {
     let tareas = 10000; 
 
     for (let i = 0; i <= tareas; i++) {
-        let estado = VillageState.random();
+        let estado = VillageState.random(20);
         pasos1 += contPas(estado, robot1, memoria1); 
         pasos2 += contPas(estado, robot2, memoria2);
     }
@@ -103,4 +99,6 @@ function compare(robot1, memoria1, robot2, memoria2) {
     return `El promedio de pasos del robot 1 fue de ${pasos1 / tareas} y el del robot2 fue de ${pasos2 / tareas}`;
 }
 
-runRobot(VillageState.random(), goalSmart, []);
+//runRobot(VillageState.random(), goalSmart, [])
+
+compare(goalOrientedRobot, [], goalSmart, [])

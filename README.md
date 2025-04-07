@@ -9,14 +9,14 @@ predefinida.
 **El proyecto esta dividido en tres módulos.**
 1.Módulo robot: en este tenemos el código de los robots así como
 la función encargada de ejecutarlos.
-2. Módulo ville: este modulo posee la clase VilleState, aquí es
+2.Módulo ville: este modulo posee la clase VilleState, aquí es
 donde al un robot pasar por un sitio si esta presente un paquete
 lo recoge y si es la dirección de entrega de un paquete que ya posee
 lo entrega.
 -esta clase posee el método `random()` el cual se encarga de crear
   el estado inicial de la Villa y de crear los paquetes y el numero
   deseado de paquetes [^2].
-3. Módulo graf: posee los enlaces entre los sitios del pueblo y la función
+3.Módulo graf: posee los enlaces entre los sitios del pueblo y la función
  `buildGraph()` encargada de crear un grafo a partir de estos enlaces o caminos.
 
 ## Ejecución del proyecto
@@ -63,8 +63,7 @@ node robot
 -`routeRobot(state, memory)` robot que cuenta con una ruta predefinida que cubre todos
  los lugares del pueblo así al seguir esta ruta 2 veces se entregaran todos los paquetes.
 -`goalOrientedRobot({place, parcels}, route)` robot que busca la ruta mas corta a un paquete, luego lo entrega siguiendo la ruta mas corta.
--`goalSmart({place, parcels}, route)` robot que determina cual es el paquete mas cercano,
- lo recoge y siguiendo la ruta mas corta lo entrega.
+-`goalSmart({place, parcels}, route)` robot que determina cual es su objetivo mas cercano, entre recoger un paquete o entregar un paquete, sigue la ruta mas corta para completar esta tarea.
 
 [^1]: disponible en <https://eloquentjavascript.net/>
 
