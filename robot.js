@@ -62,7 +62,7 @@ function goalSmart({place, parcels}, route) {
 
         if (parcel.place != place) {
             //buscar la ruta mas corta
-            rut = () => {
+            let rut = () => {
                 let rutas = [];
                 for (let index = 0; index < parcels.length; index++) {
                     rutas.push(findRoute(roadGraph, place, parcels[index].place));
@@ -102,3 +102,5 @@ function compare(robot1, memoria1, robot2, memoria2) {
     
     return `El promedio de pasos del robot 1 fue de ${pasos1 / tareas} y el del robot2 fue de ${pasos2 / tareas}`;
 }
+
+runRobot(VillageState.random(), goalSmart, []);
